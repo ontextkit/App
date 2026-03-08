@@ -1,49 +1,73 @@
-# ContextKit 🚀
+# React + TypeScript + Vite
 
-> Портативный профиль цифровой личности для персонализации взаимодействия с ИИ-ассистентами. Веб-приложение с возможностью установки на устройство (PWA). Архитектура Local-First: данные не покидают устройство пользователя
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## О проекте
-**ContextKit** — это open-source инструмент с архитектурой **Local-First**, который помогает пользователям создавать структурированные профили-контексты для взаимодействия с ИИ-ассистентами (ChatGPT, Claude, локальные LLM и др.).
+Currently, two official plugins are available:
 
-| Принцип | Реализация |
-|---------|------------|
-| **Local-First** | Данные хранятся в localStorage/IndexedDB браузера |
-| **No Server** | Никаких серверов для хранения профилей |
-| **Open Source** | Код открыт для аудита (лицензия MIT) |
-| **Portable** | Экспорт/импорт профиля в JSON (пользователь контролирует данные) |
-| **E2E (Future)** | Синхронизация через шифрование на стороне клиента (в планах) |
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-> **Наша политика:** «Мы не собираем. Мы не храним. Мы не продаём.»
+## React Compiler
 
-##  Возможности
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-### MVP (v0.1) — Сейчас
--  Профиль из 6 модулей (Цели, Работа, Стиль, Ограничения, Проекты, История)
--  Генератор промтов с пресетами (Коуч, Редактор, Аналитик, Друг)
--  Экспорт в текст / JSON / Markdown
--  Копирование в 1 клик
--  PWA-установка на телефон (iOS/Android)
--  Локальное хранение (localStorage)
+## Expanding the ESLint configuration
 
-### Roadmap (v0.2-v1.0) — В планах
--  Синхронизация между устройствами (E2E-шифрование)
--  Библиотека профессиональных шаблонов
--  Продвинутая аналитика эффективности промтов
--  Корпоративный режим (управление командой)
--  Интеграции с популярными ИИ-платформами
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-##  Команда
-- [@Tundrabitter](https://github.com/Tundrabitter) — CTO
-- [@kinzyabulatovaf-commits](https://github.com/kinzyabulatovaf-commits) — CEO
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-##  Лицензия
-MIT — используйте, меняйте, делитесь.
----
-*Проект участвует в «Студенческий стартап 2026»*
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-## Технические детали
-
-### Стек технологий
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
