@@ -1,106 +1,116 @@
+// src/App.tsx
 import { useState, useEffect } from 'react';
+import type { LifeProfile } from './types';
+import { ProfileManager } from './components/ProfileManager';
+import { ProfileWizard } from './components/ProfileWizard';
 import { ProfileForm } from './components/ProfileForm';
-import type { UserProfile } from './types';
+
+const STORAGE_KEY = 'contextkit_profiles';
 
 function App() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profiles, setProfiles] = useState<LifeProfile[]>([]);
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const [showWizard, setShowWizard] = useState(false);
 
-  // Загрузка профиля при старте
+  // Загрузка из localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('contextkit_profile');
-    if (saved) {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
       try {
-        setProfile(JSON.parse(saved));
+        const parsed = JSON.parse(stored);
+        setProfiles(parsed);
+        if (parsed.length > 0) {
+          setActiveProfileId(parsed[0].id);
+        }
       } catch (e) {
-        console.error('Ошибка загрузки профиля:', e);
+        console.error('Failed to parse profiles', e);
       }
     }
   }, []);
 
-  // Сохранение профиля
-  const handleSave = (newProfile: UserProfile) => {
-    localStorage.setItem('contextkit_profile', JSON.stringify(newProfile));
-    setProfile(newProfile);
+  // Сохранение в localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+  }, [profiles]);
+
+  const handleCreateProfile = () => setShowWizard(true);
+
+  const handleSaveProfile = (profile: LifeProfile) => {
+    setProfiles(prev => [...prev, profile]);
+    setActiveProfileId(profile.id);
+    setShowWizard(false);
   };
 
-  // Сброс профиля
-  const handleReset = () => {
-    localStorage.removeItem('contextkit_profile');
-    setProfile(null);
+  const handleDeleteProfile = (id: string) => {
+  // ✅ Подтверждение теперь в ProfileManager (кастомное модальное окно)
+  setProfiles(prev => {
+    const filtered = prev.filter(p => p.id !== id);
+    if (activeProfileId === id) {
+      setActiveProfileId(filtered.length > 0 ? filtered[0].id : null);
+    }
+    return filtered;
+  });
+};
+
+  const handleUpdateProfile = (updated: LifeProfile) => {
+    setProfiles(prev => prev.map(p => p.id === updated.id ? updated : p));
   };
+
+  // 🔹 ИМПОРТ ПРОФИЛЯ
+  const handleImportProfile = (profile: LifeProfile) => {
+    setProfiles(prev => {
+      const exists = prev.some(p => p.id === profile.id);
+      if (exists) {
+        const newProfile = { ...profile, id: crypto.randomUUID() };
+        return [...prev, newProfile];
+      }
+      return [...prev, profile];
+    });
+  };
+
+  // 🔹 ЭКСПОРТ ВСЕХ ПРОФИЛЕЙ (новое)
+  const handleExportAllProfiles = () => {
+    const dataStr = JSON.stringify(profiles, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `contextkit-all-profiles-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const activeProfile = profiles.find(p => p.id === activeProfileId) || null;
 
   return (
-    <div style={{ 
-      padding: '2rem', 
-      fontFamily: 'system-ui, sans-serif',
-      maxWidth: '600px',
-      margin: '0 auto'
-    }}>
-      <h1 style={{ color: '#333', marginBottom: '1.5rem' }}>🚀 ContextKit</h1>
-      
-      {!profile ? (
-        <>
-          <p style={{ color: '#666', marginBottom: '1.5rem' }}>
-            Заполните профиль, чтобы получать персонализированные ответы от ИИ:
-          </p>
-          <ProfileForm onSave={handleSave} />
-        </>
+    <div className="container">
+      <header className="header">
+        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📦 ContextKit</h1>
+        <p style={{ color: '#666' }}>Ваш контекст — только ваш</p>
+      </header>
+
+      <ProfileManager
+        profiles={profiles}
+        activeProfileId={activeProfileId}
+        onSelectProfile={setActiveProfileId}
+        onCreateProfile={handleCreateProfile}
+        onDeleteProfile={handleDeleteProfile}
+        onImportProfile={handleImportProfile}
+        onExportAll={handleExportAllProfiles}  // ← Новый проп
+      />
+
+      {showWizard ? (
+        <ProfileWizard 
+          onSave={handleSaveProfile} 
+        />
+      ) : activeProfile ? (
+        <ProfileForm 
+          profile={activeProfile} 
+          onUpdate={handleUpdateProfile} 
+        />
       ) : (
-        <div style={{ 
-          background: '#f8f9fa', 
-          padding: '1.5rem', 
-          borderRadius: '8px',
-          border: '1px solid #e9ecef'
-        }}>
-          <p style={{ color: '#28a745', fontWeight: 'bold', marginBottom: '1rem' }}>
-            ✅ Профиль сохранён!
-          </p>
-          
-          <div style={{ marginBottom: '1rem' }}>
-            <strong>🎯 Цели:</strong>
-            <p style={{ margin: '0.25rem 0', color: '#555' }}>{profile.goals || '—'}</p>
-          </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <strong>💼 Контекст:</strong>
-            <p style={{ margin: '0.25rem 0', color: '#555' }}>{profile.work || '—'}</p>
-          </div>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <strong>🧠 Стиль:</strong>
-            <p style={{ margin: '0.25rem 0', color: '#555' }}>{profile.style || '—'}</p>
-          </div>
-          
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <button 
-              onClick={handleReset}
-              style={{
-                padding: '0.5rem 1rem',
-                background: '#6c757d',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              ✏️ Редактировать
-            </button>
-            <button 
-              onClick={() => {
-                // Здесь позже будет генерация промта
-                alert('🔜 Скоро: генерация промта и копирование!');
-              }}
-              style={{
-                padding: '0.5rem 1rem',
-                background: '#28a745',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: 'bold'
-              }}
-            >
-              ✨ Сгенерировать промт
-            </button>
-          </div>
+        <div className="empty-state">
+          <p>👈 Выберите профиль или создайте новый</p>
         </div>
       )}
     </div>
