@@ -1,23 +1,30 @@
 <!doctype html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- 🔹 PWA Meta Tags -->
-    <link rel="manifest" href="/App/manifest.json" />
-    <meta name="theme-color" content="#6366f1" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="ContextKit" />
-    <link rel="apple-touch-icon" href="/App/icon-192.png" />
-    
-    <!-- 🔹 Фавиконка (временная, пока нет logo.svg) -->
-    <link rel="icon" type="image/png" href="/App/icon-192.png" />
-    
-    <title>ContextKit — Ваш контекст — только ваш</title>
-    <script type="module" crossorigin src="./assets/index-CGc1R7gU.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-D23jJcSU.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- 🔹 Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- 🔹 PWA -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#7b67a9" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ContextKit" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  
+  <!-- 🔹 Фавиконка - ТОЛЬКО ОДНА декларация + cache-bust -->
+  <link rel="icon" type="image/png" href="./icon-192.png?v=3" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  
+  <!-- 🔹 SEO -->
+  <title>ContextKit — Больше никогда не объясняй ИИ, кто ты</title>
+    <script type="module" crossorigin src="./assets/index-Do6PzSy5.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CimcD4K9.css">
   </head>
   <body>
     <div id="root"></div>
