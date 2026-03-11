@@ -4,6 +4,8 @@ import type { LifeProfile } from './types';
 import { ProfileManager } from './components/ProfileManager';
 import { ProfileWizard } from './components/ProfileWizard';
 import { ProfileForm } from './components/ProfileForm';
+import { Footer } from './components/Footer';
+import { Header } from './components/Header';
 
 const STORAGE_KEY = 'contextkit_profiles';
 
@@ -83,38 +85,37 @@ function App() {
   const activeProfile = profiles.find(p => p.id === activeProfileId) || null;
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📦 ContextKit</h1>
-        <p style={{ color: '#666' }}>Ваш контекст — только ваш</p>
-      </header>
+  <div className="container">
+    {/* 🔹 Логотип + заголовок через компонент */}
+    <Header />
+    
+    <ProfileManager
+      profiles={profiles}
+      activeProfileId={activeProfileId}
+      onSelectProfile={setActiveProfileId}
+      onCreateProfile={handleCreateProfile}
+      onDeleteProfile={handleDeleteProfile}
+      onImportProfile={handleImportProfile}
+      onExportAll={handleExportAllProfiles}
+    />
 
-      <ProfileManager
-        profiles={profiles}
-        activeProfileId={activeProfileId}
-        onSelectProfile={setActiveProfileId}
-        onCreateProfile={handleCreateProfile}
-        onDeleteProfile={handleDeleteProfile}
-        onImportProfile={handleImportProfile}
-        onExportAll={handleExportAllProfiles}  // ← Новый проп
+    {showWizard ? (
+      <ProfileWizard 
+        onSave={handleSaveProfile} 
       />
-
-      {showWizard ? (
-        <ProfileWizard 
-          onSave={handleSaveProfile} 
-        />
-      ) : activeProfile ? (
-        <ProfileForm 
-          profile={activeProfile} 
-          onUpdate={handleUpdateProfile} 
-        />
-      ) : (
-        <div className="empty-state">
-          <p>👈 Выберите профиль или создайте новый</p>
-        </div>
-      )}
-    </div>
-  );
+    ) : activeProfile ? (
+      <ProfileForm 
+        profile={activeProfile} 
+        onUpdate={handleUpdateProfile} 
+      />
+    ) : (
+      <div className="empty-state">
+        <p>Выберите профиль или создайте новый</p>
+      </div>
+    )}
+    
+    <Footer />
+  </div>
+);
 }
-
 export default App;

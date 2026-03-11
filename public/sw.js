@@ -1,5 +1,5 @@
 // public/sw.js
-const CACHE_NAME = 'contextkit-v1';
+const CACHE_NAME = 'contextkit-v2';
 const ASSETS = [
   '/App/',
   '/App/index.html',

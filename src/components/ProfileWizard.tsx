@@ -6,8 +6,10 @@ import { getQuestionsForDomain } from '../config/profileQuestions';
 
 interface Props {
   onSave: (profile: LifeProfile) => void;
+  // ✅ onCancel удалён — не используется в интерфейсе
 }
 
+// ✅ Убрали onCancel из деструктуризации
 export function ProfileWizard({ onSave }: Props) {
   const [domain, setDomain] = useState<LifeDomain>('work');
   const [name, setName] = useState('');
@@ -17,14 +19,12 @@ export function ProfileWizard({ onSave }: Props) {
   const [step, setStep] = useState<'domain' | 'questions' | 'narrative'>('domain');
   const [narrative, setNarrative] = useState('');
 
-  // ✅ Берём вопросы из конфигурации по выбранному домену
   const questions = getQuestionsForDomain(domain);
 
   const handleAnswerChange = (key: string) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setAnswers(prev => ({ ...prev, [key]: e.target.value }));
   };
 
-  // Автогенерация нарратива из ответов
   const generateNarrative = () => {
     const text = `В сфере "${DOMAIN_LABELS[domain]}" этот человек ценит: ${answers.question1 || 'не указано'}. 
 Его роль и обязанности: ${answers.question2 || 'не указано'}. 
@@ -55,17 +55,14 @@ export function ProfileWizard({ onSave }: Props) {
   return (
     <div style={{ width: '100%', maxWidth: '700px', margin: '0 auto', padding: '0 1rem' }}>
       
-      {/* Заголовок шага */}
       <h2 className="text-center mb-3" style={{ fontSize: '1.25rem' }}>
         {step === 'domain' && '📁 Шаг 1: Выбери сферу жизни'}
         {step === 'questions' && '📝 Шаг 2: Расскажи о себе'}
         {step === 'narrative' && '✏️ Шаг 3: Отредактируй портрет'}
       </h2>
 
-      {/* ========== ШАГ 1: Выбор домена ========== */}
       {step === 'domain' && (
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          
           <label>
             <strong>Название профиля:</strong>
             <input
@@ -100,14 +97,32 @@ export function ProfileWizard({ onSave }: Props) {
         </div>
       )}
 
-      {/* ========== ШАГ 2: Опросник ========== */}
       {step === 'questions' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          
+          {/* Прогресс-бар */}
+          <div style={{ marginBottom: '1rem' }}>
+            <div style={{ height: '4px', background: '#eee', borderRadius: '2px', overflow: 'hidden' }}>
+              <div style={{ 
+                width: `${(Object.values(answers).filter(a => a.trim()).length / 5) * 100}%`,
+                height: '100%',
+                background: 'var(--color-primary)',
+                transition: 'width 0.3s'
+              }} />
+            </div>
+            <p style={{ fontSize: '0.75rem', color: '#666', marginTop: '0.25rem', textAlign: 'center' }}>
+              {Object.values(answers).filter(a => a.trim()).length} из 5 ответов
+            </p>
+          </div>
+          
           {questions.map((q, index) => (
-            <label key={q.key} style={{ display: 'block' }}>
-              <strong>{index + 1}. {q.label}</strong>
+            <label key={q.key} style={{ display: 'block', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                <strong>{index + 1}. {q.label}</strong>
+                <span className="tooltip" title="Напишите как другу: живо, конкретно, с примерами">💡</span>
+              </div>
               <textarea
-                className="textarea mt-1"
+                className="textarea"
                 value={answers[q.key]}
                 onChange={handleAnswerChange(q.key)}
                 rows={5}
@@ -116,7 +131,6 @@ export function ProfileWizard({ onSave }: Props) {
             </label>
           ))}
 
-          {/* Кнопки навигации */}
           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             <button 
               className="btn btn-secondary" 
@@ -136,35 +150,22 @@ export function ProfileWizard({ onSave }: Props) {
         </div>
       )}
 
-      {/* ========== ШАГ 3: Нарратив ========== */}
       {step === 'narrative' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          
-          {/* Подсказка-совет */}
-          <div className="card" style={{ 
-            background: '#f0f7ff', 
-            borderLeft: '4px solid #6366f1',
-            padding: '1rem'
-          }}>
+          <div className="card" style={{ background: '#f0f7ff', borderLeft: '4px solid var(--color-primary)', padding: '1rem' }}>
             <p style={{ margin: 0, fontSize: '0.9rem', color: '#333' }}>
-              💡 <strong>Совет:</strong> Отредактируй текст ниже так, как если бы ты рассказывал о себе другу. Чем живее и конкретнее — тем лучше ИИ поймёт тебя.
+              💡 <strong>Совет:</strong> Отредактируй текст ниже так, как если бы ты рассказывал о себе другу.
             </p>
           </div>
 
-          {/* Поле редактирования нарратива */}
           <textarea
             className="textarea"
             value={narrative}
             onChange={(e) => setNarrative(e.target.value)}
             rows={10}
-            style={{ 
-              borderColor: '#6366f1', 
-              borderWidth: '2px',
-              minHeight: '200px'
-            }}
+            style={{ borderColor: 'var(--color-primary)', borderWidth: '2px', minHeight: '200px' }}
           />
 
-          {/* Кнопки навигации */}
           <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
             <button 
               className="btn btn-secondary" 
@@ -175,11 +176,7 @@ export function ProfileWizard({ onSave }: Props) {
             </button>
             <button 
               className="btn" 
-              style={{ 
-                flex: 1, 
-                padding: '0.875rem', 
-                background: '#10b981' 
-              }}
+              style={{ flex: 1, padding: '0.875rem', background: '#10b981' }}
               onMouseOver={(e) => (e.currentTarget.style.background = '#059669')}
               onMouseOut={(e) => (e.currentTarget.style.background = '#10b981')}
               onClick={handleSave}

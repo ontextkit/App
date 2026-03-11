@@ -1,5 +1,31 @@
 /* src/index.css */
 
+/* 🔹 CSS Variables из дизайна (Figma) */
+:root {
+  /* Цвета из дизайна */
+  --color-primary: #7b67a9;
+  --color-primary-dark: #6a5898;
+  --color-bg-secondary: #dedede;
+  --color-text: #000000;
+  --color-text-secondary: #666666;
+  --color-danger: #ef4444;
+  
+  /* Размеры и формы */
+  --border-radius: 14px;
+  --border-radius-sm: 8px;
+  
+  /* Шрифты */
+  --font-advent: 'Advent Pro', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  
+  /* Точные размеры шрифтов из Figma */
+  --text-title: 78.1px;           /* ContextKit */
+  --text-subtitle: 19.2px;        /* Слоган */
+  --text-profiles-title: 19.2px;  /* "Ваши профили" */
+  --text-create-btn: 19.16px;     /* "+ Создать новый профиль" */
+  --text-profile: 16.35px;        /* Основной текст профилей */
+}
+
 /* 🔹 Сброс отступов и бордер-бокс */
 * {
   box-sizing: border-box;
@@ -11,16 +37,16 @@
 html, body, #root {
   width: 100%;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-inter);
   line-height: 1.5;
-  color: #333;
+  color: var(--color-text);
   background: #fff;
 }
 
 /* 🔹 Центрирующий контейнер */
 .container {
   width: 100%;
-  max-width: 900px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
   display: flex;
@@ -28,72 +54,281 @@ html, body, #root {
   min-height: 100vh;
 }
 
-/* 🔹 Адаптив для планшетов и мобильных */
-@media (max-width: 768px) {
-  .container {
-    padding: 1.5rem 1rem;
-  }
-  h1 {
-    font-size: 1.5rem !important;
-  }
-  h2 {
-    font-size: 1.25rem !important;
-  }
-  textarea, input, select, button {
-    font-size: 16px !important; /* Предотвращает зум на iOS */
-  }
+/* 🔹 Header */
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-bg-secondary);
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding: 1rem;
-  }
-  .card {
-    padding: 1rem !important;
-  }
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-/* 🔹 Утилиты */
+.logo-wrapper {
+  width: 149px;
+  height: 149px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;  /* ← Важно: убирает лишние отступы */
+}
+
+.logo-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background: var(--color-bg-secondary);
+  border-radius: 50%;
+}
+
+.title-wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+/* 🔹 Контекст: Advent Pro, 78.1px, Regular */
+.main-title {
+  font-family: var(--font-advent);
+  font-weight: 400;
+  font-size: var(--text-title);
+  letter-spacing: 0;
+  line-height: normal;
+  color: var(--color-text);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* 🔹 Ясность: Inter, 19.2px, Light */
+.subtitle {
+  font-family: var(--font-inter);
+  font-weight: 300;
+  font-size: var(--text-subtitle);
+  letter-spacing: 0;
+  color: var(--color-text);
+  margin-top: 4px;
+}
+
+/* 🔹 Profile Manager */
+.profile-manager {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  font-family: var(--font-inter);
+}
+
+.profile-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* 🔹 Ваши профили: Inter, 19.2px, Bold */
+.profile-manager-title {
+  font-family: var(--font-inter);
+  font-weight: 700;
+  font-size: var(--text-profiles-title);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.profile-actions-top {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* 🔹 + Создать новый профиль: Inter, 19.16px, Light */
+.btn-create {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-family: var(--font-inter);
+  font-weight: 300;
+  font-size: var(--text-create-btn);
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 0.5rem 1rem;
+  min-width: 253px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.btn-create:hover {
+  background: var(--color-primary-dark);
+}
+
+/* 🔹 Список профилей */
+.profile-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.profile-item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 11px;
+  border: 2px solid var(--color-bg-secondary);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--color-bg-secondary);
+}
+
+.profile-item:hover {
+  filter: brightness(0.95);
+}
+
+.profile-item.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.profile-item.active .profile-domain,
+.profile-item.active .profile-name {
+  color: white;
+}
+
+.profile-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-domain {
+  font-family: var(--font-inter);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+/* 🔹 Текст профиля: Inter, 16.35px, Italic */
+.profile-name {
+  font-family: var(--font-inter);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-profile);
+  color: var(--color-text-secondary);
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+/* 🔹 Кнопки удаления */
+.delete-confirm {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-delete {
+  background: transparent;
+  color: var(--color-danger);
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  font-size: 13px;
+  font-family: var(--font-inter);
+}
+
+.btn-xs {
+  padding: 0.25rem 0.5rem;
+  font-size: 12px;
+  min-width: auto;
+  height: auto;
+}
+
+/* 🔹 Пустое состояние */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--color-text-secondary);
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state-text {
+  font-family: var(--font-inter);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-profile);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* 🔹 Утилиты отступов */
 .text-center { text-align: center; }
+.mb-0 { margin-bottom: 0 !important; }
 .mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
 .mb-3 { margin-bottom: 1.5rem; }
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 
-/* 🔹 Карточки (для профилей, форм) */
+/* 🔹 Карточки (для форм, профилей) */
 .card {
   background: #fff;
   border: 1px solid #eee;
-  border-radius: 12px;
+  border-radius: var(--border-radius-sm);
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .card:hover {
-  border-color: #6366f1;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(123, 103, 169, 0.15);
 }
 
-/* 🔹 Кнопки */
+/* 🔹 Кнопки (базовые) */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
-  background: #6366f1;
+  background: var(--color-primary);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
+  font-family: var(--font-inter);
 }
 
 .btn:hover {
-  background: #4f46e5;
+  background: var(--color-primary-dark);
   transform: translateY(-1px);
 }
 
@@ -102,21 +337,37 @@ html, body, #root {
 }
 
 .btn-secondary {
-  background: #eee;
-  color: #333;
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
+  font-weight: 400;
 }
 
 .btn-secondary:hover {
-  background: #ddd;
+  background: #d0d0d0;
 }
 
 .btn-danger {
   background: #fee;
-  color: #c00;
+  color: var(--color-danger);
+  font-weight: 500;
 }
 
 .btn-danger:hover {
   background: #fcc;
+}
+
+/* 🔹 Утилиты для кнопок */
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-input-label {
+  cursor: pointer;
 }
 
 /* 🔹 Поля ввода */
@@ -124,17 +375,17 @@ html, body, #root {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   font-size: 14px;
-  font-family: inherit;
+  font-family: var(--font-inter);
   background: #fff;
   transition: border-color 0.2s;
 }
 
 .input:focus, .textarea:focus, .select:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(123, 103, 169, 0.1);
 }
 
 .textarea {
@@ -143,21 +394,274 @@ html, body, #root {
   line-height: 1.5;
 }
 
-/* 🔹 Header */
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #eee;
+/* 🔹 Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
 }
 
-/* 🔹 Пустое состояние */
-.empty-state {
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  max-width: 320px;
+  width: 90%;
   text-align: center;
-  padding: 3rem 1rem;
-  color: #666;
-  flex-grow: 1;
+  border: 2px solid var(--color-bg-secondary);
+}
+
+.modal-text {
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  font-family: var(--font-inter);
+}
+
+.modal-actions {
   display: flex;
+  gap: 0.75rem;
+}
+
+.modal-actions .btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 14px;
+}
+
+/* 🔹 Адаптив для планшетов и мобильных */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .main-title {
+    font-size: 48px !important; /* Уменьшаем для мобильных */
+  }
+  
+  .subtitle {
+    font-size: 16px !important;
+  }
+  
+  h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  textarea, input, select, button {
+    font-size: 16px !important; /* Предотвращает зум на iOS */
+  }
+  
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .title-wrapper {
+    text-align: center;
+  }
+  
+  .profile-manager-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .profile-actions-top {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-create {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .profile-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .card {
+    padding: 1rem !important;
+  }
+  
+  .main-title {
+    font-size: 36px !important;
+  }
+  
+  .logo-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+}
+/* 🔹 Footer */
+.footer {
+  display: flex;
+  justify-content: center; /* ← По центру! */
+  align-items: center;
+  padding: 1.5rem;
+  margin-top: auto;
+}
+
+.telegram-link {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-primary); /* Фиолетовый фон */
+  transition: background 0.2s, transform 0.1s;
+}
+
+.telegram-link:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.telegram-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
+
+/* 🔹 Адаптив для мобильных */
+@media (max-width: 768px) {
+  .footer {
+    justify-content: center;
+    padding: 1rem;
+  }
+}
+/* 🔹 Тултипы (подсказки при наведении) */
+.tooltip {
+  position: relative;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-bg-secondary);
+  font-size: 0.75rem;
+  color: var(--color-text);
+  margin-left: 0.5rem;
+}
+
+.tooltip:hover::after {
+  content: "Напишите живо, конкретно, с примерами";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: normal;
+  width: max-content;
+  max-width: 250px;
+  z-index: 100;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Для мобильных: показывать тултип всегда (нет ховера) */
+@media (max-width: 768px) {
+  .tooltip::after {
+    content: "💡 Пишите живо, конкретно, с примерами";
+    position: static;
+    transform: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    padding: 0;
+    margin: 0.25rem 0 0 0;
+    font-size: 0.7rem;
+    display: block;
+    width: 100%;
+  }
+  .tooltip:hover::after {
+    /* Отключаем ховер-эффект на мобильных */
+    content: "💡 Пишите живо, конкретно, с примерами";
+    position: static;
+    transform: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+  }
+}
+/* 🔹 Тултипы (подсказки при наведении) */
+.tooltip {
+  position: relative;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-bg-secondary);
+  font-size: 0.75rem;
+  color: var(--color-text);
+  margin-left: 0.5rem;
+}
+
+.tooltip:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: normal;
+  width: max-content;
+  max-width: 250px;
+  z-index: 100;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Для мобильных: показывать подсказку всегда */
+@media (max-width: 768px) {
+  .tooltip::after {
+    content: attr(title);
+    position: static;
+    transform: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    padding: 0;
+    margin: 0.25rem 0 0 0;
+    font-size: 0.7rem;
+    display: block;
+    width: 100%;
+  }
+  .tooltip:hover::after {
+    content: attr(title);
+    position: static;
+    transform: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+  }
 }

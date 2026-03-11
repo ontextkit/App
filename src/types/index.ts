@@ -13,13 +13,13 @@ export type LifeDomain =
 
 // 🏷 Названия доменов для UI
 export const DOMAIN_LABELS: Record<LifeDomain, string> = {
-  work: '💼 Работа',
-  finance: '💰 Финансы',
-  family: '👨‍👩‍👧 Семья',
-  health: '🧘 Здоровье',
-  hobby: '🎨 Хобби',
-  study: '📚 Учёба',
-  personal: '👤 Личное',
+  work: 'Работа',
+  finance: 'Финансы',
+  family: 'Семья',
+  health: 'Здоровье',
+  hobby: 'Хобби',
+  study: 'Учёба',
+  personal: 'Личное',
   custom: '✨ Своя сфера'
 };
 
@@ -50,8 +50,8 @@ export interface LifeProfile {
 export type PromptPreset = 'coach' | 'editor' | 'analyst' | 'friend';
 
 export const PRESET_LABELS: Record<PromptPreset, string> = {
-  coach: "🎯 Коуч: помощь в достижении целей",
-  editor: "✍️ Редактор: правка текстов и стиля",
-  analyst: "📊 Аналитик: разбор данных и выводов",
-  friend: "💬 Друг: неформальный диалог"
+  coach: "Реализация твоих идей",
+  editor: "Редактор: правка текстов и стиля",
+  analyst: "Анализ, помощь в работе",
+  friend: "Разговор по душам"
 };

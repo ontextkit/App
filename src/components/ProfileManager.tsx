@@ -63,107 +63,88 @@ export function ProfileManager({
 
   return (
     // ✅ position: relative для позиционирования модального окна
-    <div className="mb-3" style={{ position: 'relative' }}>
+    <div className="profile-manager mb-3" style={{ position: 'relative' }}>
       
       {/* Заголовок + кнопки */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: '1rem',
-        gap: '0.5rem',
-        flexWrap: 'wrap'
-      }}>
-        <h2 className="mb-0" style={{ fontSize: '1.25rem' }}>📁 Ваши профили</h2>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <div className="profile-manager-header">
+        <h2 className="profile-manager-title">Ваши профили</h2>
+        <div className="profile-actions-top">
           <button
             onClick={onExportAll}
-            className="btn btn-secondary"
-            style={{ padding: '0.5rem 1rem', fontSize: '14px' }}
+            className="btn btn-secondary btn-sm"
             disabled={profiles.length === 0}
           >
-            📦 Экспортировать всё
+            📦 Экспорт всех
           </button>
           
-          <label className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '14px', cursor: 'pointer' }}>
+          <label className="btn btn-secondary btn-sm file-input-label">
             📥 Импорт
             <input 
               type="file" 
               accept=".json" 
               onChange={handleImportProfile} 
-              style={{ display: 'none' }} 
+              className="file-input"
             />
           </label>
           
           <button
             onClick={onCreateProfile}
-            className="btn"
-            style={{ padding: '0.5rem 1rem', fontSize: '14px' }}
+            className="btn btn-create"
           >
-            + Новый профиль
+            + Создать новый профиль
           </button>
         </div>
       </div>
 
       {/* Пустое состояние */}
       {profiles.length === 0 ? (
-        <p className="text-center" style={{ color: '#666', fontStyle: 'italic', padding: '2rem' }}>
-          У вас пока нет профилей. Создайте первый или импортируйте из файла!
-        </p>
+        <div className="empty-state">
+          <p className="empty-state-text">
+            У вас пока нет профилей. Создайте первый или импортируйте из файла!
+          </p>
+        </div>
       ) : (
         /* Список профилей */
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <ul className="profile-list">
           {profiles.map((profile) => {
             const isActive = activeProfileId === profile.id;
             const isConfirmingDelete = deleteConfirmId === profile.id;
             
             return (
-              <div
+              <li
                 key={profile.id}
                 onClick={() => onSelectProfile(profile.id)}
-                className="card"
+                className={`profile-item ${isActive ? 'active' : ''}`}
                 style={{
-                  cursor: 'pointer',
-                  border: `2px solid ${isActive ? '#6366f1' : '#eee'}`,
-                  background: isActive ? '#f0f0ff' : '#fff',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '1rem 1.25rem',
-                  transition: 'border-color 0.2s, box-shadow 0.2s',
-                  position: 'relative'
+                  // Динамические стили (зависят от стейта)
+                  borderColor: isActive ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
+                  backgroundColor: isActive ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
                 }}
               >
-                <div>
-                  <div style={{ fontWeight: 600, marginBottom: '0.25rem', fontSize: '1rem' }}>
-                    {DOMAIN_LABELS[profile.domain]}
-                  </div>
-                  <div style={{ fontSize: '0.875rem', color: '#666' }}>
-                    {profile.name}
-                  </div>
+                <div className="profile-item-content">
+                  <span className="profile-domain">{DOMAIN_LABELS[profile.domain]}</span>
+                  <span className="profile-name">{profile.name}</span>
                 </div>
 
                 {/* 🔹 Кнопка или подтверждение удаления */}
                 <div>
                   {isConfirmingDelete ? (
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div className="delete-confirm">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleConfirmDelete(profile.id);
                         }}
-                        className="btn btn-danger"
-                        style={{ padding: '0.25rem 0.5rem', fontSize: '12px' }}
+                        className="btn btn-danger btn-xs"
                       >
-                          Да
+                        ✅ Да
                       </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setDeleteConfirmId(null);
                         }}
-                        className="btn btn-secondary"
-                        style={{ padding: '0.25rem 0.5rem', fontSize: '12px' }}
+                        className="btn btn-secondary btn-xs"
                       >
                         ✕ Нет
                       </button>
@@ -174,17 +155,16 @@ export function ProfileManager({
                         e.stopPropagation();
                         setDeleteConfirmId(profile.id);
                       }}
-                      className="btn btn-danger"
-                      style={{ padding: '0.375rem 0.75rem', fontSize: '13px' }}
+                      className="btn btn-delete btn-xs"
                     >
                       🗑 Удалить
                     </button>
                   )}
                 </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
 
       {/* 🔹 Модальное окно подтверждения (работает в PWA!) */}
@@ -192,48 +172,23 @@ export function ProfileManager({
         <>
           {/* Затемнение фона */}
           <div 
+            className="modal-overlay"
             onClick={() => setDeleteConfirmId(null)}
-            style={{
-              position: 'fixed',
-              top: 0, left: 0, right: 0, bottom: 0,
-              background: 'rgba(0,0,0,0.5)',
-              zIndex: 9998
-            }}
           />
           
           {/* Само модальное окно */}
-          <div 
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              background: 'white',
-              padding: '1.5rem',
-              borderRadius: '12px',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
-              zIndex: 9999,
-              maxWidth: '320px',
-              width: '90%',
-              textAlign: 'center',
-              border: '2px solid #e5e7eb'
-            }}
-          >
-            <p style={{ marginBottom: '1.25rem', fontSize: '1rem', fontWeight: 500, color: '#1f2937' }}>
-                Удалить этот профиль?
-            </p>
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div className="modal">
+            <p className="modal-text">🗑 Удалить этот профиль?</p>
+            <div className="modal-actions">
               <button
                 onClick={() => handleConfirmDelete(deleteConfirmId)}
                 className="btn btn-danger"
-                style={{ flex: 1, padding: '0.75rem', fontSize: '14px' }}
               >
                 Удалить
               </button>
               <button
                 onClick={() => setDeleteConfirmId(null)}
                 className="btn btn-secondary"
-                style={{ flex: 1, padding: '0.75rem', fontSize: '14px' }}
               >
                 Отмена
               </button>
