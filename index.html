@@ -1,39 +1,20 @@
-<!doctype html>
-<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- 🔹 Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- 🔹 Фавиконки — относительные пути (работают и локально, и на GitHub Pages) -->
+  <link rel="icon" type="image/svg+xml" href="./logo.svg?v=6" />
+  <link rel="icon" type="image/png" href="./icon-192.png?v=6" sizes="192x192" />
   
-  <!-- 🔹 PWA (через vite-plugin-pwa) -->
+  <!-- 🔹 Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  
+  <!-- 🔹 PWA Meta Tags -->
   <meta name="theme-color" content="#7b67a9" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="ContextKit" />
   
-  <!-- 🔹 Фавиконка - ИСПРАВЛЕНО: путь с base '/App/' -->
-  <link rel="icon" type="image/png" href="/App/icon-192.png?v=6" />
-  <link rel="apple-touch-icon" href="/App/icon-192.png" />
-  
-  <!-- 🔹 SEO -->
-  <meta name="description" content="ContextKit — Ваш цифровой портрет для персонализированных промтов." />
-  <meta name="keywords" content="ИИ, промты, персонализация, контекст, ChatGPT, Claude" />
-  
-  <!-- 🔹 Open Graph -->
-  <meta property="og:title" content="ContextKit" />
-  <meta property="og:description" content="Больше никогда не объясняй ИИ, кто ты" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://ontextkit.github.io/App/" />
-  
-  <title>ContextKit — Больше никогда не объясняй ИИ, кто ты</title>
-  <script type="module" crossorigin src="/App/assets/index-oaYJV376.js"></script>
-  <link rel="stylesheet" crossorigin href="/App/assets/index-BxRjeUJC.css">
+  <title>ContextKit — Ваш контекст — только ваш</title>
 <link rel="manifest" href="/App/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/App/registerSW.js"></script></head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
