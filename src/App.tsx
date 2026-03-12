@@ -1,118 +1,101 @@
 // src/App.tsx
 import { useState, useEffect } from 'react';
-import type { LifeProfile } from './types';
-import { ProfileManager } from './components/ProfileManager';
-import { ProfileWizard } from './components/ProfileWizard';
-import { ProfileForm } from './components/ProfileForm';
+import type { Project } from './types';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
+import { HomePage } from './pages/HomePage';
+import { ProjectPage } from './pages/ProjectPage';
+import { LandingPage } from './pages/LandingPage';
 
-const STORAGE_KEY = 'contextkit_profiles';
+const STORAGE_KEY = 'contextkit_projects';
+const LANDING_SEEN_KEY = 'contextkit_landing_seen';
 
-function App() {
-  const [profiles, setProfiles] = useState<LifeProfile[]>([]);
-  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
-  const [showWizard, setShowWizard] = useState(false);
-
-  // Загрузка из localStorage
-  useEffect(() => {
+// 🔹 Lazy initialization для избежания setState в useEffect
+function getInitialProjects(): Project[] {
+  try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setProfiles(parsed);
-        if (parsed.length > 0) {
-          setActiveProfileId(parsed[0].id);
-        }
-      } catch (e) {
-        console.error('Failed to parse profiles', e);
-      }
+      return JSON.parse(stored);
     }
-  }, []);
+  } catch (e) {
+    console.error('Failed to parse projects', e);
+    localStorage.removeItem(STORAGE_KEY);
+  }
+  return [];
+}
 
-  // Сохранение в localStorage
+function getInitialLandingState(): boolean {
+  const hasSeenLanding = localStorage.getItem(LANDING_SEEN_KEY);
+  return !hasSeenLanding;
+}
+
+function App() {
+  const [projects, setProjects] = useState<Project[]>(getInitialProjects);
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const [showLanding, setShowLanding] = useState(getInitialLandingState);
+
+  // Сохранение в localStorage при изменении projects
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
-  }, [profiles]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+  }, [projects]);
 
-  const handleCreateProfile = () => setShowWizard(true);
-
-  const handleSaveProfile = (profile: LifeProfile) => {
-    setProfiles(prev => [...prev, profile]);
-    setActiveProfileId(profile.id);
-    setShowWizard(false);
+  const handleCreateProject = (newProject: Project) => {
+    setProjects(prev => [...prev, newProject]);
   };
 
-  const handleDeleteProfile = (id: string) => {
-  // ✅ Подтверждение теперь в ProfileManager (кастомное модальное окно)
-  setProfiles(prev => {
-    const filtered = prev.filter(p => p.id !== id);
-    if (activeProfileId === id) {
-      setActiveProfileId(filtered.length > 0 ? filtered[0].id : null);
-    }
-    return filtered;
-  });
-};
-
-  const handleUpdateProfile = (updated: LifeProfile) => {
-    setProfiles(prev => prev.map(p => p.id === updated.id ? updated : p));
+  const handleUpdateProject = (updatedProject: Project) => {
+    setProjects(prev => 
+      prev.map(p => p.id === updatedProject.id ? updatedProject : p)
+    );
   };
 
-  // 🔹 ИМПОРТ ПРОФИЛЯ
-  const handleImportProfile = (profile: LifeProfile) => {
-    setProfiles(prev => {
-      const exists = prev.some(p => p.id === profile.id);
-      if (exists) {
-        const newProfile = { ...profile, id: crypto.randomUUID() };
-        return [...prev, newProfile];
-      }
-      return [...prev, profile];
-    });
+  const handleSelectProject = (projectId: string) => {
+    setActiveProjectId(projectId);
   };
 
-  // 🔹 ЭКСПОРТ ВСЕХ ПРОФИЛЕЙ (новое)
-  const handleExportAllProfiles = () => {
-    const dataStr = JSON.stringify(profiles, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `contextkit-all-profiles-${Date.now()}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+  const handleBackToHome = () => {
+    setActiveProjectId(null);
   };
 
-  const activeProfile = profiles.find(p => p.id === activeProfileId) || null;
+  const handleStartFromLanding = () => {
+    localStorage.setItem(LANDING_SEEN_KEY, 'true');
+    setShowLanding(false);
+  };
+
+  const activeProject = projects.find(p => p.id === activeProjectId);
+
+  // 🔹 Если показываем лендинг — рендерим ТОЛЬКО его
+  if (showLanding) {
+    return (
+      <div className="container">
+        {/* 🔹 Передаём handleStartFromLanding в LandingPage */}
+        <LandingPage onStart={handleStartFromLanding} />
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="container">
-      <header className="header">
-        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📦 ContextKit</h1>
-        <p style={{ color: '#666' }}>Ваш контекст — только ваш</p>
-      </header>
-
-      <ProfileManager
-        profiles={profiles}
-        activeProfileId={activeProfileId}
-        onSelectProfile={setActiveProfileId}
-        onCreateProfile={handleCreateProfile}
-        onDeleteProfile={handleDeleteProfile}
-        onImportProfile={handleImportProfile}
-        onExportAll={handleExportAllProfiles}  // ← Новый проп
-      />
-
-      {showWizard ? (
-        <ProfileWizard 
-          onSave={handleSaveProfile} 
-        />
-      ) : activeProfile ? (
-        <ProfileForm 
-          profile={activeProfile} 
-          onUpdate={handleUpdateProfile} 
+      {/* 🔹 Header с обработчиком клика по логотипу */}
+      <Header onLogoClick={handleBackToHome} />
+      
+      {activeProject ? (
+        <ProjectPage
+          project={activeProject}
+          onUpdateProject={handleUpdateProject}
+          onBack={handleBackToHome}
         />
       ) : (
-        <div className="empty-state">
-          <p>👈 Выберите профиль или создайте новый</p>
-        </div>
+        <HomePage
+          projects={projects}
+          onCreateProject={handleCreateProject}
+          onSelectProject={handleSelectProject}
+          onViewAllProjects={() => {}}
+        />
       )}
+      
+      <Footer />
     </div>
   );
 }
