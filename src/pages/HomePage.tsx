@@ -8,6 +8,7 @@ import { ExportImportPanel } from '../components/Home/ExportImportPanel';
 interface Props {
   projects: Project[];
   onCreateProject: (project: Project) => void;
+  onDeleteProject: (projectId: string) => void;
   onSelectProject: (projectId: string) => void;
   onViewAllProjects?: () => void;
 }
@@ -15,6 +16,7 @@ interface Props {
 export function HomePage({ 
   projects, 
   onCreateProject, 
+  onDeleteProject,
   onSelectProject, 
   onViewAllProjects 
 }: Props) {
@@ -48,6 +50,10 @@ export function HomePage({
             key={project.id}
             project={project}
             onClick={() => onSelectProject(project.id)}
+            onDelete={(e) => {
+              e.stopPropagation();
+              onDeleteProject(project.id);
+            }}
           />
         ))}
 

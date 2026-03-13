@@ -5,9 +5,10 @@ import type { Project } from '../../types';
 interface Props {
   project: Project;
   onClick: () => void;
+  onDelete?: (e: React.MouseEvent) => void;
 }
 
-export function ProjectCard({ project, onClick }: Props) {
+export function ProjectCard({ project, onClick, onDelete }: Props) {
   const timeAgo = getTimeAgo(project.updatedAt);
   const typeLabel = PROJECT_TYPE_LABELS[project.type];
   const defaultColor = PROJECT_TYPE_COLORS[project.type];
@@ -39,6 +40,16 @@ export function ProjectCard({ project, onClick }: Props) {
         <span className="prompts-count">
           {project.metaPrompts.length} мета-промптов
         </span>
+        {onDelete && (
+          <button
+            className="delete-button"
+            onClick={onDelete}
+            aria-label={`Удалить проект ${project.title}`}
+            title="Удалить проект"
+          >
+            ✕
+          </button>
+        )}
       </div>
     </div>
   );

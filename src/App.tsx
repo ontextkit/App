@@ -49,6 +49,13 @@ function App() {
     );
   };
 
+  const handleDeleteProject = (projectId: string) => {
+    setProjects(prev => prev.filter(p => p.id !== projectId));
+    if (activeProjectId === projectId) {
+      setActiveProjectId(null);
+    }
+  };
+
   const handleSelectProject = (projectId: string) => {
     setActiveProjectId(projectId);
   };
@@ -90,6 +97,7 @@ function App() {
         <HomePage
           projects={projects}
           onCreateProject={handleCreateProject}
+          onDeleteProject={handleDeleteProject}
           onSelectProject={handleSelectProject}
           onViewAllProjects={() => {}}
         />

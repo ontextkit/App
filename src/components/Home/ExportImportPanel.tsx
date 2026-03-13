@@ -1,7 +1,13 @@
 // src/components/Home/ExportImportPanel.tsx
 import { useState } from 'react';
 import type { Project } from '../../types';
-import { exportProjectsToJSON, downloadJSON, importProjectsFromJSON } from '../../utils/projectExport';
+import { 
+  exportProjectsToJSON, 
+  downloadJSON, 
+  importProjectsFromJSON,
+  exportProjectsToMarkdown,
+  downloadMarkdown
+} from '../../utils/projectExport';
 import { Modal } from '../common/Modal';
 
 interface Props {
@@ -10,11 +16,13 @@ interface Props {
 }
 
 type ExportMode = 'all' | 'selected' | null;
+type ExportFormat = 'json' | 'markdown' | null;
 
 export function ExportImportPanel({ projects, onImportProjects }: Props) {
   const [showExportModal, setShowExportModal] = useState(false);
   const [selectedProjectIds, setSelectedProjectIds] = useState<Set<string>>(new Set());
   const [exportMode, setExportMode] = useState<ExportMode>(null);
+  const [exportFormat, setExportFormat] = useState<ExportFormat>(null);
 
   const handleExport = () => {
     if (projects.length === 0) return;
@@ -31,10 +39,19 @@ export function ExportImportPanel({ projects, onImportProjects }: Props) {
       return;
     }
     
-    const json = exportProjectsToJSON(projectsToExport);
-    downloadJSON(`contextkit-export-${new Date().toISOString().split('T')[0]}.json`, json);
+    const dateStr = new Date().toISOString().split('T')[0];
+    
+    if (exportFormat === 'markdown') {
+      const md = exportProjectsToMarkdown(projectsToExport);
+      downloadMarkdown(`contextkit-export-${dateStr}.md`, md);
+    } else {
+      const json = exportProjectsToJSON(projectsToExport);
+      downloadJSON(`contextkit-export-${dateStr}.json`, json);
+    }
+    
     setShowExportModal(false);
     setExportMode(null);
+    setExportFormat(null);
     setSelectedProjectIds(new Set());
   };
 
@@ -112,6 +129,29 @@ export function ExportImportPanel({ projects, onImportProjects }: Props) {
   {/* 🔹 Children передаются между открывающим и закрывающим тегом Modal */}
   {projects.length > 0 && (
     <div className="export-options">
+      {/* Формат экспорта */}
+      <div style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid var(--color-border-light)' }}>
+        <strong style={{ display: 'block', marginBottom: '0.5rem', fontSize: 'var(--text-sm)' }}>Формат:</strong>
+        <label className="export-option" style={{ marginBottom: '0.5rem' }}>
+          <input
+            type="radio"
+            name="exportFormat"
+            checked={exportFormat === 'json'}
+            onChange={() => setExportFormat('json')}
+          />
+          <span>JSON (для импорта обратно)</span>
+        </label>
+        <label className="export-option">
+          <input
+            type="radio"
+            name="exportFormat"
+            checked={exportFormat === 'markdown'}
+            onChange={() => setExportFormat('markdown')}
+          />
+          <span>Markdown (для чтения и публикации)</span>
+        </label>
+      </div>
+
       {/* Режим: все проекты */}
       <label className="export-option">
         <input
