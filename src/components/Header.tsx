@@ -1,13 +1,31 @@
 // src/components/Header.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Props {
-  onLogoClick?: () => void;  // ← Новый пропс
+  onLogoClick?: () => void;
 }
 
-export function Header({ onLogoClick }: Props) {  // ← Принимаем пропс
+export function Header({ onLogoClick }: Props) {
   const [logoError, setLogoError] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const baseUrl = import.meta.env.BASE_URL;
+
+  // 🔹 Загрузка темы при монтировании
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = saved === 'dark' || (saved === null && prefersDark);
+    setIsDark(initial);
+    document.documentElement.setAttribute('data-theme', initial ? 'dark' : 'light');
+  }, []);
+
+  // 🔹 Переключение темы
+  const toggleTheme = () => {
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', newTheme ? 'dark' : 'light');
+  };
 
   return (
     <header className="header">
@@ -29,7 +47,7 @@ export function Header({ onLogoClick }: Props) {  // ← Принимаем пр
               />
             ) : (
               <div className="logo-fallback">
-                <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#7b67a9' }}>CK</span>
+                <span className="logo-fallback-text">CK</span>
               </div>
             )}
           </div>
@@ -38,6 +56,16 @@ export function Header({ onLogoClick }: Props) {  // ← Принимаем пр
             <h1 className="main-title">ContextKit</h1>
             <p className="subtitle">Больше никогда не объясняй ИИ, кто ты</p>
           </div>
+        </button>
+
+        {/* 🔹 Переключатель темы */}
+        <button
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={isDark ? 'Включить светлую тему' : 'Включить тёмную тему'}
+          type="button"
+        >
+          <span className="theme-icon">{isDark ? '☀️' : '🌙'}</span>
         </button>
       </div>
     </header>
