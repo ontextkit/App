@@ -36,6 +36,22 @@ export function LandingPage({ onStart }: Props) {
         </div>
       </section>
 
+      {/* 🔹 Серые блоки-заглушки для эстетики */}
+      <section className="placeholder-grid">
+        <div className="placeholder-card">
+          <h4>📁 У вас нет проектов</h4>
+          <p>Создайте первый прямо сейчас</p>
+        </div>
+        <div className="placeholder-card">
+          <h4>✨ Создайте новый проект!</h4>
+          <p>Нажмите на карточку с плюсом</p>
+        </div>
+        <div className="placeholder-card">
+          <h4>🧩 Мета-промпты</h4>
+          <p>Готовые шаблоны для ИИ</p>
+        </div>
+      </section>
+
       {/* Инструкция (раскрывается) */}
       {showInstructions && (
         <section className="landing-instructions">

@@ -10,20 +10,15 @@ interface Props {
   onCreateProject: (project: Project) => void;
   onDeleteProject: (projectId: string) => void;
   onSelectProject: (projectId: string) => void;
-  onViewAllProjects?: () => void;
 }
 
 export function HomePage({ 
   projects, 
   onCreateProject, 
   onDeleteProject,
-  onSelectProject, 
-  onViewAllProjects 
+  onSelectProject 
 }: Props) {
   const [showCreateModal, setShowCreateModal] = useState(false);
-
-  const visibleProjects = projects.slice(0, 6);
-  const hasMoreProjects = projects.length > 6;
 
   return (
     <div className="home-page">
@@ -45,7 +40,7 @@ export function HomePage({
           <span className="card-title">Новый проект</span>
         </button>
 
-        {visibleProjects.map((project) => (
+        {projects.map((project) => (
           <ProjectCard
             key={project.id}
             project={project}
@@ -56,17 +51,6 @@ export function HomePage({
             }}
           />
         ))}
-
-        {hasMoreProjects && onViewAllProjects && (
-          <button 
-            className="project-card view-all"
-            onClick={onViewAllProjects}
-            aria-label="Посмотреть все проекты"
-          >
-            <span className="card-title">Все проекты</span>
-            <span className="projects-count">({projects.length})</span>
-          </button>
-        )}
       </div>
 
       {showCreateModal && (
