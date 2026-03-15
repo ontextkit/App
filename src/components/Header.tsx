@@ -40,7 +40,7 @@ export function Header({ onLogoClick }: Props) {
           <div className="logo-wrapper">
             {!logoError ? (
               <img
-                src={`${baseUrl}logo.svg`}
+                src={`${baseUrl}${isDark ? 'icon2.png' : 'logo.svg'}`}
                 alt="ContextKit"
                 className="logo"
                 onError={() => setLogoError(true)}

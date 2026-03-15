@@ -321,8 +321,7 @@ function ClarifyStep({ clarify, onChange }: {
       </p>
 
       <div className="form-group">
-        <label className="form-label required">Цель</label>  {/* ← ← ← Добавить класс */}
-        <label className="form-label">Цель</label>
+        <label className="form-label required">Цель</label>
         <input
           type="text"
           className="form-input"

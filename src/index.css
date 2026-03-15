@@ -49,22 +49,83 @@
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* 🔹 ТЁМНАЯ ТЕМА */
+/* 🔹 ТЁМНАЯ ТЕМА — контрастные и эстетичные цвета */
 [data-theme="dark"] {
-  --color-bg: #1a1a1f;
-  --color-bg-secondary: #25252b;
-  --color-bg-tertiary: #2f2f37;
+  --color-bg: #0d0d12;          /* Глубокий тёмный */
+  --color-bg-secondary: #15151e; /* Чуть светлее */
+  --color-bg-tertiary: #1c1c29;  /* Ещё светлее для акцентов */
   
-  --color-text: #f5f5f7;
-  --color-text-secondary: #a1a1a6;
-  --color-text-tertiary: #6e6e73;
+  --color-text: #e5e5eb;         /* Яркий белый */
+  --color-text-secondary: #a1a1aa; /* Мягкий серый */
+  --color-text-tertiary: #71717a; /* Темный серый */
   
-  --color-border: #3a3a42;
-  --color-border-light: #2f2f37;
+  --color-border: #3f3f46;       /* Чёткий бордер */
+  --color-border-light: #27272a; /* Мягкий бордер */
   
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --color-primary: #8b5cf6;      /* Яркий фиолетовый — акцент */
+  --color-primary-hover: #7c3aed; /* Темнее при наведении */
+  
+  --color-success: #10b981;      /* Зелёный */
+  --color-warning: #f59e0b;      /* Оранжевый */
+  --color-error: #ef4444;        /* Красный */
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
+  
+  /* 🔹 Дополнительные акцентные цвета для эстетики */
+  --color-accent-1: #8b5cf6;     /* Фиолетовый */
+  --color-accent-2: #ec4899;     /* Розовый */
+  --color-accent-3: #3b82f6;     /* Синий */
+  --color-accent-4: #14b8a6;     /* Бирюзовый */
+}
+
+/* 🔹 Стили тёмной темы для компонентов */
+[data-theme="dark"] .card {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .kusk-step-content {
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+[data-theme="dark"] .kusk-preview {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .kusk-preview-content {
+  background: #121216;
+  border-color: var(--color-border);
+  color: #e5e5eb;
+}
+
+[data-theme="dark"] .kusk-title-input {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-textarea,
+[data-theme="dark"] .form-select {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .question-item {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .source-item {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border);
 }
 
 * {
@@ -229,10 +290,24 @@ body {
   position: relative;  /* ← Для абсолютного позиционирования переключателя */
 }
 
-/* Переключатель справа, но не ломает центрирование */
+/* Переключение темы — сдвинуто левее от экспорта */
 .theme-toggle {
   position: absolute;
-  right: 0;
+  right: 120px;  /* ← Дистанция от правого края */
+}
+
+/* На больших экранах — увеличиваем отступ */
+@media (min-width: 769px) {
+  .theme-toggle {
+    right: 160px;  /* ← Больше места до экспорта */
+  }
+}
+
+/* На мобильных — ближе к центру */
+@media (max-width: 768px) {
+  .theme-toggle {
+    right: 80px;
+  }
 }
 
 .logo-wrapper {
@@ -582,7 +657,7 @@ body {
 }
 
 .modal {
-  background: white;
+  background: var(--color-bg);
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 600px;
@@ -590,6 +665,13 @@ body {
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.3s ease-out;
+  border: 1px solid var(--color-border);
+}
+
+/* Тёмная тема для модальных окон */
+[data-theme="dark"] .modal {
+  background: #25252b;
+  border-color: #3a3a42;
 }
 
 .modal-header {
@@ -645,7 +727,22 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.form-input,
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-family: inherit;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  overflow: hidden;  /* ← Скрываем выходящий текст */
+  text-overflow: ellipsis;  /* ← Добавляем многоточие */
+  white-space: normal;  /* ← Разрешаем перенос */
+  word-wrap: break-word;  /* ← Перенос длинных слов */
+}
+
 .form-textarea {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -653,8 +750,28 @@ body {
   border-radius: var(--radius-md);
   font-size: var(--text-base);
   font-family: inherit;
-  background: white;
+  background: var(--color-bg);
+  color: var(--color-text);
   transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;  /* ← Можно растягивать по вертикали */
+  overflow: auto;  /* ← Добавляем прокрутку */
+  white-space: pre-wrap;  /* ← Сохраняем переносы строк */
+  word-wrap: break-word;  /* ← Перенос длинных слов */
+  min-height: 80px;  /* ← Минимальная высота */
+  max-height: 300px;  /* ← Максимальная высота */
+}
+
+/* Тёмная тема для полей ввода */
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-textarea {
+  background: #2f2f37;
+  border-color: #3a3a42;
+  color: #f5f5f7;
+}
+
+[data-theme="dark"] .form-input::placeholder,
+[data-theme="dark"] .form-textarea::placeholder {
+  color: #6e6e73;
 }
 
 .form-input:focus,
@@ -680,7 +797,7 @@ body {
   padding: 0.875rem 1rem;
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: white;
+  background: var(--color-bg);
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-text);
@@ -699,6 +816,16 @@ body {
   background: var(--color-primary);
   color: white;
   font-weight: 600;
+}
+
+/* Тёмная тема для опций типа проекта */
+[data-theme="dark"] .project-type-option {
+  background: #2f2f37;
+  border-color: #3a3a42;
+}
+
+[data-theme="dark"] .project-type-option:hover {
+  background: #3a3a42;
 }
 
 .modal-actions {
@@ -1046,6 +1173,10 @@ body {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+.kusk-step-content {
+  margin-bottom: 1rem;
 }
 
 .kusk-step-content h3 {
@@ -2102,6 +2233,21 @@ display: flex;
   border-color: var(--color-primary);
   background: rgba(123, 103, 169, 0.05);
   transform: translateY(-2px);
+}
+
+/* Тёмная тема для шаблонов */
+[data-theme="dark"] .template-grid {
+  border-top-color: #3a3a42;
+}
+
+[data-theme="dark"] .template-card {
+  background: #2f2f37;
+  border-color: #3a3a42;
+}
+
+[data-theme="dark"] .template-card:hover {
+  background: #3a3a42;
+  border-color: #7b67a9;
 }
 
 .template-card h4 {

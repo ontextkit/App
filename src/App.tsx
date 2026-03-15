@@ -40,7 +40,7 @@ function App() {
   }, [projects]);
 
   const handleCreateProject = (newProject: Project) => {
-    setProjects(prev => [...prev, newProject]);
+    setProjects(prev => [newProject, ...prev]);
   };
 
   const handleUpdateProject = (updatedProject: Project) => {
