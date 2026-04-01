@@ -2583,3 +2583,69 @@ display: flex;
   font-size: var(--text-sm);
   color: var(--color-text);
 }
+/* ============================================================================
+   🔹 MEDIA QUERY ДЛЯ ТЁМНОЙ ТЕМЫ (автоматически)
+   ============================================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0d0d12;
+    --color-bg-secondary: #15151e;
+    --color-bg-tertiary: #1c1c29;
+    --color-text: #e5e5eb;
+    --color-text-secondary: #a1a1aa;
+    --color-text-tertiary: #71717a;
+    --color-border: #3f3f46;
+    --color-border-light: #27272a;
+    --color-primary: #8b5cf6;
+  }
+  
+  body {
+    background: var(--color-bg) !important;
+    color: var(--color-text) !important;
+  }
+  
+  .card {
+    background: var(--color-bg-secondary) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  .header {
+    background: var(--color-bg) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  input, select, textarea {
+    background: var(--color-bg-secondary) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  .btn {
+    background: var(--color-primary) !important;
+    color: #ffffff !important;
+  }
+  
+  .btn-secondary {
+    background: var(--color-bg-tertiary) !important;
+    color: var(--color-text) !important;
+  }
+  
+  .kusk-step-content,
+  .kusk-preview,
+  .kusk-title-input,
+  .question-item,
+  .source-item {
+    background: var(--color-bg-tertiary) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  .modal {
+    background: var(--color-bg-secondary) !important;
+    color: var(--color-text) !important;
+  }
+  
+  /* Кнопки "Открыть в" в тёмной теме */
+  .ai-platform-btn {
+    background: var(--color-bg-secondary) !important;
+  }
+}
