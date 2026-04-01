@@ -1803,17 +1803,6 @@ display: flex;
 
 /* Для тёмной темы (опционально) - авто-определение */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0d0d12;
-    --color-bg-secondary: #15151e;
-    --color-bg-tertiary: #1c1c29;
-    --color-text: #e5e5eb;
-    --color-text-secondary: #a1a1aa;
-    --color-text-tertiary: #71717a;
-    --color-border: #3f3f46;
-    --color-border-light: #27272a;
-    --color-primary: #8b5cf6;
-    --color-primary-dark: #7c3aed;
     --color-primary-light: #a78bfa;
   }
   
@@ -2639,3 +2628,32 @@ display: flex;
 }
 
 .selection-list {
+
+/* Исправления 2026-04-01 15:20 */
+@media (prefers-color-scheme: dark) {
+  .logo-wrapper {
+    width: 72px !important;
+    height: 72px !important;
+  }
+  
+  .logo {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+  
+  .export-import-panel {
+    z-index: 5 !important;
+  }
+}
+
+[data-theme="dark"] .logo-wrapper {
+  width: 72px !important;
+  height: 72px !important;
+}
+
+[data-theme="dark"] .logo {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
