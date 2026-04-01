@@ -1801,69 +1801,11 @@ display: flex;
   border-color: var(--color-primary);
 }
 
-/* Для тёмной темы (опционально) - авто-определение */
+/* Для тёмной темы (опционально) */
 @media (prefers-color-scheme: dark) {
-    --color-primary-light: #a78bfa;
-  }
-  
-  body {
-    background: var(--color-bg) !important;
-    color: var(--color-text) !important;
-  }
-  
-  .card,
-  .project-card,
-  .header,
-  .modal {
-    background: var(--color-bg-secondary) !important;
-    border-color: var(--color-border) !important;
-    color: var(--color-text) !important;
-  }
-  
-  input, select, textarea {
-    background: var(--color-bg-secondary) !important;
-    color: var(--color-text) !important;
-    border-color: var(--color-border) !important;
-  }
-  
-  select.form-select {
-    background-color: #1c1c1e !important;
-    color: white !important;
-  }
-  
-  .btn {
-    background: var(--color-primary) !important;
-    color: white !important;
-  }
-  
-  .btn-secondary {
-    background: var(--color-bg-tertiary) !important;
-    color: var(--color-text) !important;
-  }
-  
-  .kusk-step-content,
-  .kusk-preview,
-  .kusk-title-input,
-  .question-item,
-  .source-item {
-    background: var(--color-bg-tertiary) !important;
-    border-color: var(--color-border) !important;
-  }
-  
-  .ai-platform-btn {
-    background: var(--color-bg-tertiary) !important;
-    border-color: var(--color-border) !important;
-  }
-  
-  .empty-state,
-  .subtitle,
-  .main-title,
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--color-text) !important;
-  }
-  
-  label {
-    color: var(--color-text) !important;
+  .form-select {
+    background-color: #1c1c1e;
+    color: white;
   }
 }
 
@@ -2362,9 +2304,6 @@ display: flex;
   color: var(--color-text);
   cursor: pointer;
   transition: all 0.2s;
-  word-break: break-word !important;
-  overflow-wrap: break-word !important;
-  max-width: 150px !important;
 }
 
 .ai-platform-btn:hover {
@@ -2628,9 +2567,100 @@ display: flex;
 }
 
 .selection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
 
-/* Исправления 2026-04-01 15:20 */
+.selection-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.selection-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.selection-title {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+/* ============================================================================
+   🔹 MEDIA QUERY ДЛЯ ТЁМНОЙ ТЕМЫ (автоматически)
+   ============================================================================ */
 @media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0d0d12;
+    --color-bg-secondary: #15151e;
+    --color-bg-tertiary: #1c1c29;
+    --color-text: #e5e5eb;
+    --color-text-secondary: #a1a1aa;
+    --color-text-tertiary: #71717a;
+    --color-border: #3f3f46;
+    --color-border-light: #27272a;
+    --color-primary: #8b5cf6;
+  }
+  
+  body {
+    background: var(--color-bg) !important;
+    color: var(--color-text) !important;
+  }
+  
+  .card {
+    background: var(--color-bg-secondary) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  .header {
+    background: var(--color-bg) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  input, select, textarea {
+    background: var(--color-bg-secondary) !important;
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  .btn {
+    background: var(--color-primary) !important;
+    color: #ffffff !important;
+  }
+  
+  .btn-secondary {
+    background: var(--color-bg-tertiary) !important;
+    color: var(--color-text) !important;
+  }
+  
+  .kusk-step-content,
+  .kusk-preview,
+  .kusk-title-input,
+  .question-item,
+  .source-item {
+    background: var(--color-bg-tertiary) !important;
+    border-color: var(--color-border) !important;
+  }
+  
+  .modal {
+    background: var(--color-bg-secondary) !important;
+    color: var(--color-text) !important;
+  }
+  
+  /* Кнопки "Открыть в" в тёмной теме */
+  .ai-platform-btn {
+    background: var(--color-bg-secondary) !important;
+  }
+}
+
+/* Авто-тёмная тема через prefers-color-scheme - НЕ перезаписывает :root */
+@media (prefers-color-scheme: dark) {
+  /* Логотипы одинакового размера */
   .logo-wrapper {
     width: 72px !important;
     height: 72px !important;
@@ -2642,18 +2672,15 @@ display: flex;
     object-fit: contain !important;
   }
   
+  /* Экспорт не перекрывает лого */
   .export-import-panel {
     z-index: 5 !important;
   }
-}
-
-[data-theme="dark"] .logo-wrapper {
-  width: 72px !important;
-  height: 72px !important;
-}
-
-[data-theme="dark"] .logo {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
+  
+  /* Кнопки "Открыть в" не выходят за рамки */
+  .ai-platform-btn {
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 150px !important;
+  }
 }
