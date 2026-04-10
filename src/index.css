@@ -80,6 +80,32 @@
   --color-accent-4: #14b8a6;     /* Бирюзовый */
 }
 
+/* 🔹 Тёмная тема для модальных окон - исправляем контраст */
+[data-theme="dark"] .modal {
+  background: #1a1a20 !important;  /* Более тёмный фон */
+  border-color: #3a3a42;
+}
+
+[data-theme="dark"] .modal-header {
+  border-bottom-color: #3a3a42;
+}
+
+[data-theme="dark"] .modal-title {
+  color: #e5e5eb !important;  /* Светлый текст */
+}
+
+[data-theme="dark"] .form-label {
+  color: #e5e5eb !important;  /* Светлый текст лейблов */
+}
+
+[data-theme="dark"] .export-option span {
+  color: #e5e5eb;  /* Светлый текст в опциях экспорта */
+}
+
+[data-theme="dark"] .selection-title {
+  color: #e5e5eb;  /* Светлый текст в списке выбора */
+}
+
 /* 🔹 Стили тёмной темы для компонентов */
 [data-theme="dark"] .card {
   background: var(--color-bg-secondary);
@@ -2295,7 +2321,7 @@ display: flex;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem; /* Уменьшили padding по бокам */
   background: white;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -2304,6 +2330,11 @@ display: flex;
   color: var(--color-text);
   cursor: pointer;
   transition: all 0.2s;
+  max-width: 140px; /* Ограничиваем максимальную ширину */
+  word-break: break-word; /* Перенос длинных слов */
+  overflow-wrap: break-word;
+  white-space: normal; /* Разрешаем перенос текста */
+  line-height: 1.2;
 }
 
 .ai-platform-btn:hover {
@@ -2313,21 +2344,30 @@ display: flex;
 
 .ai-platform-icon {
   font-size: 1.25rem;
+  flex-shrink: 0; /* Иконка не сжимается */
 }
 
-.ai-platform-btn {
-  word-break: break-word !important;
-  overflow-wrap: break-word !important;
-  max-width: 150px !important;
+.ai-platform-name {
+  text-align: center; /* Центрируем текст */
+  line-height: 1.2;
 }
 
 @media (max-width: 640px) {
   .ai-platform-btn {
-    flex: 1;
-    min-width: 100px;
-    max-width: 160px;
+    flex: 1 1 auto; /* Кнопки могут сжиматься */
+    min-width: 80px; /* Минимальная ширина */
+    max-width: 120px; /* Максимальная ширина для мобильных */
     justify-content: center;
-    font-size: 0.85rem !important;
+    font-size: 0.75rem !important; /* Меньший шрифт на мобильных */
+    padding: 0.4rem 0.5rem; /* Ещё меньше padding на мобильных */
+  }
+  
+  .ai-platform-icon {
+    font-size: 1rem; /* Меньше иконка */
+  }
+  
+  .open-in-ai-buttons {
+    gap: 0.4rem; /* Меньше отступ между кнопками */
   }
 }
 
@@ -2479,11 +2519,37 @@ display: flex;
 /* Панель экспорта/импорта */
 .export-import-panel {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 1rem;
+  right: 6rem; /* Отступ справа больше, чтобы не перекрывать лого на мобильных */
   display: flex;
   gap: 0.75rem;
   z-index: 10;
+}
+
+/* Адаптив для мобильных - перемещаем панель ниже и левее */
+@media (max-width: 768px) {
+  .export-import-panel {
+    top: auto;
+    bottom: -3rem; /* Перемещаем под header */
+    right: 50%;
+    transform: translateX(50%);
+    position: relative;
+    margin-top: 1rem;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .export-import-panel {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-export,
+  .btn-import {
+    width: 100%;
+    max-width: 200px;
+  }
 }
 
 .btn-export,
